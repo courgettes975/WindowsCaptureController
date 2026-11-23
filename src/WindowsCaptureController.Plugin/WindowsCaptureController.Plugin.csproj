@@ -32,6 +32,8 @@
       <Private>false</Private>
     </Reference>
     <Compile Include="..\..\shared\**\*.cs" Link="Shared\%(RecursiveDir)%(Filename)%(Extension)" />
+    <!-- SVG icon sources (single source of truth), rendered at runtime with BitmapImage.FromSvg. -->
+    <EmbeddedResource Include="..\..\assets\icons\*.svg" LogicalName="icons.%(Filename).svg" />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="PostBuildEvent">

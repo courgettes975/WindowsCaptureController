@@ -4,7 +4,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.7.0</Version>
+    <Version>0.8.0</Version>
     <Company>Windows Capture Controller</Company>
     <Product>Windows Capture Controller</Product>
     <SatelliteResourceLanguages>en;fr</SatelliteResourceLanguages>

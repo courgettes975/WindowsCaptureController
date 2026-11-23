@@ -4,7 +4,7 @@ Plugin **Logi Options+** (Logi Actions SDK) pour piloter l'**Outil Capture d'éc
 depuis le **Logitech MX Creative Keypad** (touches LCD) et le **MX Creative Dialpad** (molette).
 
 > Projet non affilié à Microsoft ni à Logitech. Windows et Snipping Tool sont des marques de Microsoft.
-> **État : en développement (v0.7.0, phases 1 à 7 sur 10).** Testé sur Windows 11 26H2 (build 26300),
+> **État : en développement (v0.8.0, phases 1 à 8 sur 10).** Testé sur Windows 11 26H2 (build 26300),
 > Outil Capture 11.2609.15, Logi Options+ 2.9, Logi Plugin Service 6.4.2.
 
 ## Ce que fait le plugin
@@ -15,6 +15,7 @@ depuis le **Logitech MX Creative Keypad** (touches LCD) et le **MX Creative Dial
 | Vidéo | Préparer (zone choisie par l'utilisateur), Démarrer / Arrêter (touche dynamique avec minuteur), Pause / Reprendre, Micro de l'enregistreur, Abandonner (double appui), Enregistrer sous, Dernière vidéo, Dossier vidéos |
 | Annotation | Stylo, Surligneur, Gomme, Tout effacer (double appui), Règle, Annuler / Rétablir, Copier, Enregistrer sous, Partager, Couleur ‹ ›, Épaisseur ± / défaut, Zoom ± / 100 % / Ajuster |
 | Molette (Dialpad) | 5 modes : zoom, épaisseur, couleur, historique, délai — touche « Mode molette » sur le Keypad |
+| Contextuel | 9 touches « Contexte 1…9 » qui deviennent automatiquement la page Capture, Image, Vidéo ou Enregistrement selon l'état de l'Outil Capture |
 
 ## Principes
 
@@ -34,9 +35,10 @@ src/WindowsCaptureController.Agent    WccAgent.exe (net8.0-windows) : hôte hors
 src/WindowsCaptureController.Core     contrôleur Outil Capture, UI Automation, capture multi-écran, config, journaux
 src/WindowsCaptureController.Cli      WindowsCaptureController.exe diagnose | test …
 shared/                               protocole agent + accumulateur de molette
-tests/                                82 tests unitaires (xUnit)
+tests/                                104 tests unitaires (xUnit)
+assets/icons/                         41 icônes SVG (source unique, rendues par BitmapImage.FromSvg)
 scripts/                              Install.ps1, Uninstall.ps1, Build-Package.ps1, New-PackageIcon.ps1
-docs/                                 rapport de faisabilité et comptes rendus des phases 2 à 7
+docs/                                 rapport de faisabilité, comptes rendus des phases 2 à 8, planche des icônes
 ```
 
 ## Compiler et installer
@@ -67,3 +69,4 @@ Journaux : `%LOCALAPPDATA%\WindowsCaptureController\logs`.
 ## Licence
 
 MIT — voir [LICENSE](LICENSE).
+

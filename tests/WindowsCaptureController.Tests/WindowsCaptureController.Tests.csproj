@@ -23,6 +23,8 @@
     <ProjectReference Include="..\..\src\WindowsCaptureController.Core\WindowsCaptureController.Core.csproj" />
     <!-- Pure shared logic (dial accumulator) compiled into the tests as it is into plugin and agent. -->
     <Compile Include="..\..\shared\DialAccumulator.cs" Link="Shared\DialAccumulator.cs" />
+    <Compile Include="..\..\shared\ContextProfiles.cs" Link="Shared\ContextProfiles.cs" />
+    <Compile Include="..\..\shared\AgentProtocol.cs" Link="Shared\AgentProtocol.cs" />
   </ItemGroup>
 
 </Project>

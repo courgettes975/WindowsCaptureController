@@ -64,6 +64,8 @@ namespace Loupedeck.WindowsCaptureControllerPlugin
             {
                 this.Agent = AgentClient.Acquire(FindPluginBinDirectory());
                 PluginLog.Info($"Windows Capture Controller {typeof(WindowsCaptureControllerPlugin).Assembly.GetName().Version} loaded");
+                var (svgOk, svgTotal) = SvgIcons.SelfTest();
+                PluginLog.Info($"SVG icons rendered by the SDK: {svgOk}/{svgTotal} (others use the drawn fallback)");
                 if (!this.Agent.IsAvailable)
                 {
                     PluginLog.Warning("Agent missing: " + this.Agent.ExePath);

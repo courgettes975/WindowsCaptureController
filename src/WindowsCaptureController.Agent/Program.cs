@@ -138,6 +138,16 @@ internal static class Program
 
         int? IntArg(string k) => r.Args.TryGetValue(k, out var v) && int.TryParse(v, out var i) ? i : null;
 
+        if (r.Cmd == AgentCommands.AppState)
+        {
+            var st = c.GetApplicationState();
+            return new AgentResponse
+            {
+                Id = r.Id, Ok = true, Status = "Success", Message = st.ToString(),
+                Data = { ["state"] = st.ToString(), ["profiles"] = Configuration.ConfigStore.Load().EnableContextProfiles.ToString() },
+            };
+        }
+
         if (r.Cmd == AgentCommands.ConfigGet)
         {
             var cfg = Configuration.ConfigStore.Load();
@@ -187,6 +197,9 @@ internal static class Program
             AgentCommands.VideoMic => c.ToggleRecordingMicrophone(),
             AgentCommands.VideoSaveAs => c.SaveVideoAs(),
             AgentCommands.HistoryOpen => c.OpenHistoryItem(Arg("name", "")),
+            AgentCommands.SelectionClose => c.CloseSelection(),
+            AgentCommands.VideoPlay => c.ToggleVideoPlayback(),
+            AgentCommands.VideoCopy => c.CopyVideo(),
             AgentCommands.EditPen => c.SelectPen(),
             AgentCommands.EditHighlighter => c.SelectHighlighter(),
             AgentCommands.EditEraser => c.SelectEraser(),

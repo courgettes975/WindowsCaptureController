@@ -37,6 +37,14 @@ namespace Loupedeck.WindowsCaptureControllerPlugin
         ZoomFit,
         Swatch,
         Width,
+        Play,
+        MicrophoneOff,
+        Text,
+        Redact,
+        Settings,
+        Diagnostic,
+        Error,
+        Success,
         Empty,
     }
 
@@ -106,9 +114,19 @@ namespace Loupedeck.WindowsCaptureControllerPlugin
             }
             else
             {
-                Accent = spec.Accent;
-                WidthValue = spec.WidthValue;
-                DrawGlyph(b, spec.Glyph, cx, cy, r, spec.Fg, spec.Bg);
+                // Source of truth: assets\icons\<Glyph>.svg (BitmapImage.FromSvg). Drawn fallback otherwise.
+                var svg = SvgIcons.TryGet(spec.Glyph, spec.Fg, spec.Accent ?? Palette.Red, spec.Bg, spec.WidthValue);
+                if (svg != null)
+                {
+                    var side = (int)(r * 2.3f);
+                    b.DrawImage(svg, (int)(cx - side / 2f), (int)(cy - side / 2f), side, side);
+                }
+                else
+                {
+                    Accent = spec.Accent;
+                    WidthValue = spec.WidthValue;
+                    DrawGlyph(b, spec.Glyph, cx, cy, r, spec.Fg, spec.Bg);
+                }
             }
 
             if (!string.IsNullOrEmpty(spec.Corner))
@@ -387,6 +405,23 @@ namespace Loupedeck.WindowsCaptureControllerPlugin
                     break;
                 }
 
+                case Glyph.Play:
+                    b.DrawLine(cx - r * 0.35f, cy - r * 0.6f, cx - r * 0.35f, cy + r * 0.6f, fg, t * 1.4f);
+                    b.DrawLine(cx - r * 0.35f, cy - r * 0.6f, cx + r * 0.6f, cy, fg, t * 1.4f);
+                    b.DrawLine(cx - r * 0.35f, cy + r * 0.6f, cx + r * 0.6f, cy, fg, t * 1.4f);
+                    break;
+
+                case Glyph.Error:
+                    b.FillCircle(cx, cy, r * 0.8f, Palette.Orange);
+                    b.DrawText("!", (int)(cx - r), (int)(cy - r), (int)(r * 2), (int)(r * 2), Palette.Background, (int)(r * 1.2f));
+                    break;
+
+                case Glyph.Success:
+                    b.DrawLine(cx - r * 0.6f, cy, cx - r * 0.15f, cy + r * 0.45f, Palette.Green, t * 1.6f);
+                    b.DrawLine(cx - r * 0.15f, cy + r * 0.45f, cx + r * 0.7f, cy - r * 0.5f, Palette.Green, t * 1.6f);
+                    break;
+
+                // MicrophoneOff, Text, Redact, Settings, Diagnostic: SVG only (no drawn fallback needed by any key yet).
                 case Glyph.Empty:
                 default:
                     break;

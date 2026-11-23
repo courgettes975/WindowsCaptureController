@@ -111,7 +111,11 @@ public sealed class WindowsCaptureController : IWindowsCaptureController
             : ActionResult.Sent(ControlMethod.Win32Window, "Fenêtre restaurée, premier plan refusé par Windows.");
     }, debounce: false);
 
-    /// <summary>Phase 2: Closed / Idle / Unknown only (UI Automation states arrive in phase 4–6).</summary>
+    /// <summary>
+    /// Global state for the contextual keys, from the most specific to the least (phase 8). Every step uses
+    /// window classes / AutomationIds measured in phases 2–6; a running process alone never means "recording".
+    /// Passive: never closes or opens anything.
+    /// </summary>
     public CaptureAppState GetApplicationState()
     {
         if (SnippingToolLocator.GetProcesses().Count == 0)
@@ -119,8 +123,45 @@ public sealed class WindowsCaptureController : IWindowsCaptureController
             return CaptureAppState.Closed;
         }
 
-        return SnippingToolLocator.FindMainWindow() != null ? CaptureAppState.Idle : CaptureAppState.Unknown;
+        try
+        {
+            var rec = Automation.RecordingAutomation.Snapshot(detectPause: false).State;
+            if (rec != CaptureAppState.Unknown)
+            {
+                return rec; // Recording, RecordingPaused, VideoReady, VideoSelection, CaptureSelection, VideoEditing
+            }
+
+            if (Automation.EditorAutomation.Snapshot().Open)
+            {
+                return CaptureAppState.ImageEditing;
+            }
+        }
+        catch (Exception ex) when (ex is System.Windows.Automation.ElementNotAvailableException or System.Runtime.InteropServices.COMException)
+        {
+            return CaptureAppState.Unknown;
+        }
+
+        // Main window without image / video, or only background overlay processes: nothing to edit.
+        return CaptureAppState.Idle;
     }
+
+    /// <summary>Closes an open capture / video selection overlay with its own Close button (no capture).</summary>
+    public ActionResult CloseSelection() => this.Guard(nameof(this.CloseSelection), () =>
+        Automation.CaptureOverlayAutomation.Close()
+            ? ActionResult.Ok(ControlMethod.UiAutomation, "Sélection fermée.")
+            : ActionResult.Unavailable("Aucune sélection ouverte."));
+
+    /// <summary>Play / pause of the video player shown after a recording (PlayPauseButtonOnLeft).</summary>
+    public ActionResult ToggleVideoPlayback() => this.Guard(nameof(this.ToggleVideoPlayback), () =>
+        Automation.RecordingAutomation.Invoke(Automation.RecordingAutomation.FindById(Automation.SnippingToolUiMap.VideoPlayPause), "Play/Pause")
+            ? ActionResult.Ok(ControlMethod.UiAutomation, "Lecture / pause.")
+            : ActionResult.Unavailable("Aucune vidéo ouverte."));
+
+    /// <summary>Copy of the video player (copyButton). The clipboard content is never read.</summary>
+    public ActionResult CopyVideo() => this.Guard(nameof(this.CopyVideo), () =>
+        Automation.RecordingAutomation.Invoke(Automation.RecordingAutomation.FindById(Automation.SnippingToolUiMap.VideoCopy), "Video copy")
+            ? ActionResult.Ok(ControlMethod.UiAutomation, "Vidéo copiée.")
+            : ActionResult.Unavailable("Aucune vidéo ouverte."));
 
     // =====================================================================================
     // Image capture

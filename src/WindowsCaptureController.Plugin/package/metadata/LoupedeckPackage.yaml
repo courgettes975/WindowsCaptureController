@@ -6,7 +6,7 @@ name: WindowsCaptureController
 displayName: Windows Capture Controller
 description: Pilote l'Outil Capture d'ecran de Windows 11 depuis le MX Creative Keypad / Dialpad - nouvelle capture, modes, plein ecran, dossier des captures. Tout fonctionne localement, rien n'est envoye sur Internet.
 pluginFileName: WindowsCaptureControllerPlugin.dll
-version: 0.7.0
+version: 0.8.0
 author: Richard Lavallee
 copyright: Copyright © 2026 Richard Lavallee. Windows and Snipping Tool are trademarks of Microsoft; this plugin is not affiliated with Microsoft or Logitech.
 

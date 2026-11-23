@@ -53,6 +53,12 @@ public static class AgentCommands
     public const string VideoSaveAs = "video.saveas";       // video editor "Enregistrer sous" (saveButton)
     public const string VideoState = "video.state";
 
+    // Context (phase 8)
+    public const string AppState = "app.state";          // data: state (CaptureAppState), profiles (true/false)
+    public const string SelectionClose = "selection.close";
+    public const string VideoPlay = "video.play";
+    public const string VideoCopy = "video.copy";
+
     // Dial (phase 7)
     public const string ConfigGet = "config.get";        // data: defaultDialMode, dialDirection, dialSensitivity, captureDelaySeconds
     public const string HistoryList = "history.list";    // args: max ; data: count, "0".."n-1" = kind|yyyy-MM-dd HH:mm|name
