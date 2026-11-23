@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- WccAgent.exe: out-of-process automation host started by the Logi plugin.
+       UI Automation, SendInput and Win32 activation run HERE, never inside the Logi Plugin Service:
+       a hang or crash of the agent cannot take Logi Options+ down (the plugin restarts it). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <RootNamespace>WindowsCaptureController.Agent</RootNamespace>
+    <AssemblyName>WccAgent</AssemblyName>
+    <ApplicationManifest>..\WindowsCaptureController.Cli\app.manifest</ApplicationManifest>
+    <RollForward>LatestMajor</RollForward>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WindowsCaptureController.Core\WindowsCaptureController.Core.csproj" />
+    <Compile Include="..\..\shared\**\*.cs" Link="Shared\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

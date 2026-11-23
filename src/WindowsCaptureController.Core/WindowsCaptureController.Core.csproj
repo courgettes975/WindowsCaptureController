@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Core library: Snipping Tool control, Windows helpers, logging.
+       Windows 10 SDK TFM gives the documented WinRT PackageManager API (package version lookup).
+       Hosted later by the out-of-process agent (phase 3); the plugin itself never loads UIA/Win32 input code. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <RootNamespace>WindowsCaptureController</RootNamespace>
+    <AssemblyName>WindowsCaptureController.Core</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- UIAutomationClient / UIAutomationTypes (managed UI Automation) ship with the WPF framework reference. -->
+    <UseWPF>true</UseWPF>
+    <!-- System.Drawing (screen copy, PNG/JPEG encoding) and the WinForms clipboard (STA). -->
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="WindowsCaptureController.Tests" />
+    <!-- UseWPF drops System.IO from implicit usings; restore it. -->
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+</Project>

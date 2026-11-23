@@ -1,0 +1,13 @@
+<Project>
+  <!-- Shared settings for every project of Windows Capture Controller. -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.7.0</Version>
+    <Company>Windows Capture Controller</Company>
+    <Product>Windows Capture Controller</Product>
+    <SatelliteResourceLanguages>en;fr</SatelliteResourceLanguages>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

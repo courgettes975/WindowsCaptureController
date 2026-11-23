@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Diagnostic / test CLI: WindowsCaptureController.exe diagnose | test ... | list-actions -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <RootNamespace>WindowsCaptureController.Cli</RootNamespace>
+    <AssemblyName>WindowsCaptureController</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Only for the experimental owner window of LaunchUriForResultsAsync. -->
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WindowsCaptureController.Core\WindowsCaptureController.Core.csproj" />
+  </ItemGroup>
+
+</Project>

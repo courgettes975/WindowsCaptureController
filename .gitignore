@@ -1,0 +1,12 @@
+# Build outputs (contain local machine paths)
+bin/
+obj/
+dist/
+*.user
+*.suo
+.vs/
+TestResults/
+*.trx
+
+# Local runtime data (never committed): logs, config, agent cache live in %LOCALAPPDATA%
+*.log

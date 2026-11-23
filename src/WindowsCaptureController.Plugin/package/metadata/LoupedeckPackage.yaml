@@ -1,0 +1,28 @@
+# ==================================================================================================
+# Windows Capture Controller - package manifest (Logi Actions SDK, package type plugin4)
+# ==================================================================================================
+type: plugin4
+name: WindowsCaptureController
+displayName: Windows Capture Controller
+description: Pilote l'Outil Capture d'ecran de Windows 11 depuis le MX Creative Keypad / Dialpad - nouvelle capture, modes, plein ecran, dossier des captures. Tout fonctionne localement, rien n'est envoye sur Internet.
+pluginFileName: WindowsCaptureControllerPlugin.dll
+version: 0.7.0
+author: Richard Lavallee
+copyright: Copyright © 2026 Richard Lavallee. Windows and Snipping Tool are trademarks of Microsoft; this plugin is not affiliated with Microsoft or Logitech.
+
+pluginFolderWin: bin
+
+supportedDevices:
+    # MX Creative Console: MX Creative Keypad (9 LCD keys) + MX Creative Dialpad (dial/roller).
+    - LogitechCreativeFamily
+    - LoupedeckCtFamily
+
+pluginCapabilities:
+    # Keys must work while the Snipping Tool is NOT in the foreground (e.g. "new capture").
+    - HasNoApplication
+
+# 6.4 = Logi Plugin Service on .NET 10 (this DLL targets net10.0).
+minimumLoupedeckVersion: 6.4
+
+license: MIT
+licenseUrl: https://opensource.org/licenses/MIT

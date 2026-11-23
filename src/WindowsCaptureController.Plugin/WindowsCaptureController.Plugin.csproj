@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Logi Actions SDK plugin loaded by the Logi Plugin Service.
+       Target net10.0 (not net8.0): the INSTALLED PluginApi.dll 6.4.2 is built for .NET 10 and the
+       service hosts .NET 10; compiling net8.0 against it is not supported. The automation agent
+       (WccAgent.exe) stays on net8.0 as specified. This DLL contains no UI Automation / SendInput code. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Loupedeck.WindowsCaptureControllerPlugin</RootNamespace>
+    <AssemblyName>WindowsCaptureControllerPlugin</AssemblyName>
+    <Nullable>disable</Nullable>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <PluginDir>$(LocalAppData)\Logi\LogiPluginService\Plugins\</PluginDir>
+    <BaseOutputPath>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\bin\'))</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)$(Configuration)\bin\</OutputPath>
+    <PluginShortName>WindowsCaptureController</PluginShortName>
+
+    <!-- Compile against the PluginApi.dll of the INSTALLED Logi Plugin Service (it refuses newer APIs). -->
+    <PluginApiDir Condition="'$(PluginApiDir)' == ''">C:\Program Files\Logi\LogiPluginService\</PluginApiDir>
+    <BuildAgent Condition="'$(BuildAgent)' == ''">true</BuildAgent>
+    <!-- false when packaging (no dev .link, no reload). -->
+    <LinkPlugin Condition="'$(LinkPlugin)' == ''">true</LinkPlugin>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="PluginApi">
+      <HintPath>$(PluginApiDir)PluginApi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Compile Include="..\..\shared\**\*.cs" Link="Shared\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <PackageFiles Include="package\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(OutputPath)..\%(RecursiveDir)" />
+  </Target>
+
+  <!-- Dev rebuild: the running agent (started by the loaded plugin) locks its DLLs. Stop ONLY the
+       WccAgent started from this output folder; the plugin restarts it lazily on the next key press. -->
+  <Target Name="StopDevAgent" BeforeTargets="PublishAgent" Condition="'$(BuildAgent)' == 'true'">
+    <Exec Command="powershell -NoProfile -Command &quot;Get-Process WccAgent -ErrorAction SilentlyContinue | Where-Object { $_.Path -like '$(OutputPath)agent\*' } | Stop-Process -Force; exit 0&quot;" ContinueOnError="true" />
+  </Target>
+
+  <!-- Publishes WccAgent.exe next to the plugin DLL (bin\agent\). -->
+  <Target Name="PublishAgent" AfterTargets="CopyPackage" Condition="'$(BuildAgent)' == 'true'">
+    <Message Text="Publishing WccAgent..." Importance="High" />
+    <Exec Command="dotnet publish &quot;$(MSBuildThisFileDirectory)..\WindowsCaptureController.Agent\WindowsCaptureController.Agent.csproj&quot; -c $(Configuration) -o &quot;$(OutputPath)agent&quot; --nologo -v q" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PublishAgent" Condition="'$(LinkPlugin)' == 'true'">
+    <Exec Command="echo $(BaseOutputPath)$(Configuration)\ &gt; &quot;$(PluginDir)$(PluginShortName).link&quot;" />
+    <Message Text="Plugin link: $(PluginDir)$(PluginShortName).link" Importance="High" />
+    <Exec Command="start loupedeck:plugin/$(PluginShortName)/reload" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="PluginClean" AfterTargets="CoreClean">
+    <Delete Files="$(PluginDir)$(PluginShortName).link" />
+    <RemoveDir Directories="$(OutputPath)..\" />
+  </Target>
+
+</Project>
